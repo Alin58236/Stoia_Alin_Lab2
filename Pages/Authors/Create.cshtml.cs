@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Stoia_Alin_Lab2.Data;
 using Stoia_Alin_Lab2.Models;
 
-namespace Stoia_Alin_Lab2.Pages.Books
+namespace Stoia_Alin_Lab2.Pages.Authors
 {
     public class CreateModel : PageModel
     {
@@ -21,22 +21,11 @@ namespace Stoia_Alin_Lab2.Pages.Books
 
         public IActionResult OnGet()
         {
-            var authorList = _context.Author.Select(x => new
-            {
-                x.ID,
-                FullName = x.LastName + " " + x.FirstName
-                
-            }) ;
-            
-
-
-            ViewData["PublisherID"] = new SelectList(_context.Set<Publisher>(), "ID", "PublisherName");
-            ViewData["AuthorID"] = new SelectList(authorList, "ID", "FullName");
             return Page();
         }
 
         [BindProperty]
-        public Book Book { get; set; }
+        public Author Author { get; set; }
         
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
@@ -47,7 +36,7 @@ namespace Stoia_Alin_Lab2.Pages.Books
                 return Page();
             }
 
-            _context.Book.Add(Book);
+            _context.Author.Add(Author);
             await _context.SaveChangesAsync();
 
             return RedirectToPage("./Index");

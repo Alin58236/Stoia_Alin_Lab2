@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Stoia_Alin_Lab2.Data;
 using Stoia_Alin_Lab2.Models;
 
-namespace Stoia_Alin_Lab2.Pages.Books
+namespace Stoia_Alin_Lab2.Pages.Publishers
 {
     public class IndexModel : PageModel
     {
@@ -19,16 +19,13 @@ namespace Stoia_Alin_Lab2.Pages.Books
             _context = context;
         }
 
-        public IList<Book> Book { get;set; } = default!;
+        public IList<Publisher> Publisher { get;set; } = default!;
 
         public async Task OnGetAsync()
         {
-            if (_context.Book != null)
+            if (_context.Publisher != null)
             {
-                Book = await _context.Book
-                    .Include(b=>b.Publisher)
-                    .Include(b => b.Author).ToListAsync();
-               
+                Publisher = await _context.Publisher.ToListAsync();
             }
         }
     }
