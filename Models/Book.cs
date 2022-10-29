@@ -28,8 +28,7 @@ namespace Stoia_Alin_Lab2.Models
 
         public Publisher? Publisher { get; set; }//nav property
 
-       
-        
+        public ICollection<BookCategory> BookCategories { get; set; }
 
     }
 }

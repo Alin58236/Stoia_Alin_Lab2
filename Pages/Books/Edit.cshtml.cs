@@ -11,7 +11,7 @@ using Stoia_Alin_Lab2.Models;
 
 namespace Stoia_Alin_Lab2.Pages.Books
 {
-    public class EditModel : PageModel
+    public class EditModel : BookCategoriesPageModel
     {
         private readonly Stoia_Alin_Lab2.Data.Stoia_Alin_Lab2Context _context;
 
@@ -29,12 +29,17 @@ namespace Stoia_Alin_Lab2.Pages.Books
             {
                 return NotFound();
             }
-
-            var book =  await _context.Book.FirstOrDefaultAsync(m => m.ID == id);
+            Book = await _context.Book
+             .Include(b => b.Publisher)
+             .Include(b => b.BookCategories).ThenInclude(b => b.Category)
+             .AsNoTracking()
+             .FirstOrDefaultAsync(m => m.ID == id);
+            //  var book =  await _context.Book.FirstOrDefaultAsync(m => m.ID == id);
             if (book == null)
             {
                 return NotFound();
             }
+            PopulateAssignedCategoryData(_context, Book);
 
             var authorList = _context.Author.Select(x => new
             {
@@ -51,40 +56,11 @@ namespace Stoia_Alin_Lab2.Pages.Books
 "FullName");
             return Page();
         }
-
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see https://aka.ms/RazorPagesCRUD.
-        public async Task<IActionResult> OnPostAsync()
-        {
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
-
-            _context.Attach(Book).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!BookExists(Book.ID))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return RedirectToPage("./Index");
-        }
-
-        private bool BookExists(int id)
-        {
-          return _context.Book.Any(e => e.ID == id);
-        }
     }
+
+    private bool BookExists(int id)
+    {
+        return _context.Book.Any(e => e.ID == id);
+    }
+    //}
 }
